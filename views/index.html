@@ -1,0 +1,30 @@
+<html lang="de">
+<head>
+    <title>Socket IO Chat App</title>
+
+    <link href="/css/styles.css" rel="stylesheet" type="text/css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>SOCKET.IO CHAT</h1>
+
+    <form id="new-user-wrapper" action="">
+        <label for="new-user-input">What's yout name?</label>
+        <input id="new-user-input" type="text"><button>Let me chat!</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('new-user-wrapper');
+        const input = document.getElementById('new-user-input');
+
+        form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                window.sessionStorage.setItem('username', input.value);
+                window.location.href = '/chat';
+                
+                return false;
+            });
+    </script>
+</body>
+</html>

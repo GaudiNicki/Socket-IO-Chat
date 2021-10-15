@@ -1,0 +1,58 @@
+<html lang="de">
+    <head>
+        <title>Socket IO Chat App</title>
+
+        <link href="/css/styles.css" rel="stylesheet" type="text/css"/>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <ul id="messages"></ul>
+        <form id="new-message-wrapper" action="">
+            <input id="new-message-input" autocomplete="off" /><button>Send</button>
+        </form>
+
+        <script>
+            var socket = io();
+
+            var messages = document.getElementById("messages");
+            var form = document.getElementById("new-message-wrapper");
+            var input = document.getElementById("new-message-input");
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if(input.value) {
+                    socket.emit('chat message', { username: sessionStorage.getItem('username'), message: input.value });
+                    input.value = '';
+                }
+
+                return false;
+            });
+
+            socket.on('user join', (msg) => {
+                var item = document.createElement('li');
+                item.className = 'new-user';
+                item.textContent = 'Neuer Nutzer ist dem Server beigetreten!';
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            socket.on('user leave', (msg) => {
+                var item = document.createElement('li');
+                item.className = 'user-left';
+                item.textContent = 'Nutzer hat den Server verlassen!';
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            socket.on('chat message', (msg) => {
+                var item = document.createElement('li');
+                item.textContent = msg.username + ": " + msg.message;
+                messages.appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        </script>
+    </body>
+</html>
